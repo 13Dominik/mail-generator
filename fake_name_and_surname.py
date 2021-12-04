@@ -24,7 +24,7 @@ class FakeName:
 
     def last_name_male(self):
         """
-        :return: Polish, male last name without polish chars
+        :return: Polish, male surname without polish chars
         """
         last_name = self.fake.last_name_male()
 
@@ -36,14 +36,3 @@ class FakeName:
                     break
             flag = False
         return last_name
-
-'''
-fake = FakeName()
-
-print(fake.first_name())
-
-fake = Faker('pl-PL')
-#fake.seed(0)
-for x in range(10):
-    print(fake.first_name_male(), fake.last_name_male())
-    '''
