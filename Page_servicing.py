@@ -4,8 +4,13 @@ from selenium import webdriver
 from time import sleep
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.select import Select
+from selenium.webdriver.chrome.options import Options
+from fake_useragent import UserAgent
+
 from selenium.webdriver.common.keys import Keys
 from generate_login_password import GenerateLoginPassword
+
+
 import random
 from fake_data import FakeData
 
@@ -21,7 +26,13 @@ class Page_service:
         self.password = password
         self.login = login
         self.toy = toy
-        self.driver = webdriver.Chrome(ChromeDriverManager().install())
+        #Dealing with user agent
+        options = Options()
+        ua = UserAgent()
+        userAgent = ua.random
+        options.add_argument(f'user-agent={userAgent}')
+
+        self.driver = webdriver.Chrome(chrome_options= options,executable_path= ChromeDriverManager().install())
 
 
     def load_page(self):
