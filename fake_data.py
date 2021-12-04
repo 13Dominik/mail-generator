@@ -2,7 +2,7 @@
 from faker import Faker
 
 
-class FakeName:
+class FakeData:
 
     def __init__(self):
         self.fake = Faker('pl-PL')
@@ -36,3 +36,9 @@ class FakeName:
                     break
             flag = False
         return last_name
+
+    def get_random_toy_from_txt(self) -> str:
+        """ Returns random toy from file txt with names of toys """
+        with open("random_toys.txt", mode='r') as toys_file:
+            list_of_toys = toys_file.readlines()
+        return random.choice(list_of_toys)
