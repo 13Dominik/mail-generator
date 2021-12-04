@@ -23,17 +23,28 @@ class Page_service:
         self.password = password
         self.login = login
         self.toy = toy
+        self.proxy_login = "pxu27239-0"
+        self.proxy_password = "hP4LKCLgKQr8kKZ6nliY"
         # Dealing with user agent
+        PROXY = "x.botproxy.net"
+        PROXY_PORT = "8080"
+        options_seleniumWire = {
+            'proxy': {
+                'https': f'https://{self.proxy_login}:{self.proxy_password}@{PROXY}:{PROXY_PORT}',
+            }
+        }
         options = Options()
-        ua = UserAgent()
-        userAgent = ua.random
-        options.add_argument(f'user-agent={userAgent}')
+        #options.add_argument("--proxy-server=%s" % PROXY)
+        #a = UserAgent()
+        #userAgent = ua.random
+        #options.add_argument(f'user-agent={userAgent}')
 
-        self.driver = webdriver.Chrome(chrome_options=options, executable_path=ChromeDriverManager().install())
+        self.driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options = options, seleniumwire_options=options_seleniumWire)
         self.driver.delete_all_cookies()
 
     def load_page(self):
         self.driver.get('https://poczta.o2.pl/rejestracja/')
+
 
     def fill_name(self):
         """fill name label with randomly generate name"""
