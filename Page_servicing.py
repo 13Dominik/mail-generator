@@ -3,6 +3,7 @@
 from selenium import webdriver
 from time import sleep
 from webdriver_manager.chrome import ChromeDriverManager
+#from tbselenium import
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.chrome.options import Options
 from fake_useragent import UserAgent
@@ -29,6 +30,7 @@ class Page_service:
         options.add_argument(f'user-agent={userAgent}')
 
         self.driver = webdriver.Chrome(chrome_options=options, executable_path=ChromeDriverManager().install())
+        self.driver.delete_all_cookies()
 
     def load_page(self):
         self.driver.get('https://poczta.o2.pl/rejestracja/')
