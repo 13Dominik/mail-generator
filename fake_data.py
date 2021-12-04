@@ -1,5 +1,6 @@
 # import faker
 from faker import Faker
+import random
 
 
 class FakeData:
