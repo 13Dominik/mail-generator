@@ -7,14 +7,20 @@ from time import sleep
 
 def main():
     person = FakeData()
-
+    # peron data
     name = person.first_name_male()
     surname = person.last_name_male()
-    login_password = GenerateLoginPassword(name, surname)
-    password = login_password.generate_password()
-    login = login_password.generate_login()
+    # login Password
+    labels = GenerateLoginPassword(name, surname)
+    password = labels.generate_password()
+    login = labels.generate_login()
+    # page obj
     page = Page_service(name, surname, password, login ,person.get_random_toy_from_txt())
-    if page.fill_all():
+    page.fill_all()
+
+    sleep(5)
+
+    if page.is_success(): # if account did successful
         save = SaveData(login, password)
         save.save_account_data()
         sleep(4)

@@ -1,12 +1,16 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from selenium import webdriver
+#from selenium import webdriver
 from time import sleep
 from webdriver_manager.chrome import ChromeDriverManager
+from seleniumwire import webdriver
 #from tbselenium import
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.chrome.options import Options
 from fake_useragent import UserAgent
+from seleniumwire import webdriver
+import time
+from webdriver_manager.chrome import ChromeDriverManager
 
 from selenium.webdriver.common.keys import Keys
 from generate_login_password import GenerateLoginPassword
@@ -23,27 +27,33 @@ class Page_service:
         self.password = password
         self.login = login
         self.toy = toy
-        self.proxy_login = "pxu27239-0"
-        self.proxy_password = "hP4LKCLgKQr8kKZ6nliY"
-        # Dealing with user agent
-        PROXY = "x.botproxy.net"
-        PROXY_PORT = "8080"
-        options_seleniumWire = {
-            'proxy': {
-                'https': f'https://{self.proxy_login}:{self.proxy_password}@{PROXY}:{PROXY_PORT}',
-            }
-        }
-        options = Options()
-        #options.add_argument("--proxy-server=%s" % PROXY)
-        #a = UserAgent()
-        #userAgent = ua.random
-        #options.add_argument(f'user-agent={userAgent}')
 
-        self.driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options = options, seleniumwire_options=options_seleniumWire)
-        self.driver.delete_all_cookies()
+
+        #self.proxy_login = "pxu27239-0"
+        #self.proxy_password = "hP4LKCLgKQr8kKZ6nliY"
+        # Dealing with user agent
+        #options = {
+        #   'proxy': {
+        #        'http': 'http://pxu27239-0:hP4LKCLgKQr8kKZ6nliY@x.botproxy.net:8443',
+        #        'https': 'http://pxu27239-0:hP4LKCLgKQr8kKZ6nliY@x.botproxy.net:8443',
+        #        'no_proxy': "localhost,127.0.0.1"
+        #    }
+        #}
+        #PROXY = "89.171.144.168:5678"
+        options = Options()
+
+        #options.add_argument("--proxy-server=%s" % PROXY)
+
+        ua = UserAgent()
+        userAgent = ua.random
+        options.add_argument(f'user-agent={userAgent}')
+
+
+        self.driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(),options=options )
+        #self.driver.delete_all_cookies()
 
     def load_page(self):
-        self.driver.get('https://poczta.o2.pl/rejestracja/')
+        self.driver.get('http://poczta.o2.pl/rejestracja/')
 
 
     def fill_name(self):
@@ -141,7 +151,9 @@ class Page_service:
     def fill_all(self) -> bool:
 
         try:
+            print("1")
             self.load_page()
+            print("2")
             self.fill_name()
             self.fill_surname()
             self.fill_sex()
@@ -149,10 +161,12 @@ class Page_service:
             self.fill_login()
             self.fill_day()
             self.choose_year()
+            sleep(10)
             self.fill_pasword()
             self.fill_question()
             self.choose_account_type()
             self.fill_requirements()
+            sleep(3)
             self.set_account()
             return True
         except:
