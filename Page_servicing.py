@@ -1,10 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-#from selenium import webdriver
+# from selenium import webdriver
 from time import sleep
 from webdriver_manager.chrome import ChromeDriverManager
 from seleniumwire import webdriver
-#from tbselenium import
+# from tbselenium import
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.chrome.options import Options
 from fake_useragent import UserAgent
@@ -21,40 +21,42 @@ from fake_data import FakeData
 
 class Page_service:
 
-    def __init__(self, name: str, surname: str, password: str, login: str, toy: str) -> None:
+    def __init__(self, name: str, surname: str, password: str, login: str, toy: str, options: Options) -> None:
         self.name = name
         self.surname = surname
         self.password = password
         self.login = login
         self.toy = toy
+        self.options = options  # for user agent
 
+        # proxy
+        #  polish proxy:
+        proxy1  = {
+            'proxy': {
+                'http': 'http://tLC67ARs:qieSBY74@45.137.55.17:64012',
+                'https': 'http://tLC67ARs:qieSBY74@45.137.55.17:64012',
+                'no_proxy': "localhost,127.0.0.1"
+            }
+        }
+        # rotating proxy:
+        # proxy2 = {
+        #    'proxy': {
+        #         'http': 'http://pxu27239-0:hP4LKCLgKQr8kKZ6nliY@x.botproxy.net:8080',
+        #         'https': 'http://pxu27239-0:hP4LKCLgKQr8kKZ6nliY@x.botproxy.net:8080',
+        #         'no_proxy': "localhost,127.0.0.1"
+        #     }
+        #  }
+                                                                                        # user agent
+        self.driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options=self.options)
 
-        #self.proxy_login = "pxu27239-0"
-        #self.proxy_password = "hP4LKCLgKQr8kKZ6nliY"
-        # Dealing with user agent
-        #options = {
-        #   'proxy': {
-        #        'http': 'http://pxu27239-0:hP4LKCLgKQr8kKZ6nliY@x.botproxy.net:8443',
-        #        'https': 'http://pxu27239-0:hP4LKCLgKQr8kKZ6nliY@x.botproxy.net:8443',
-        #        'no_proxy': "localhost,127.0.0.1"
-        #    }
-        #}
-        #PROXY = "89.171.144.168:5678"
-        options = Options()
+        # with proxy:                                                                      # user agent         # proxy
+        #  self.driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(),options=options, seleniumwire_options=proxy1)
 
-        #options.add_argument("--proxy-server=%s" % PROXY)
-
-        ua = UserAgent()
-        userAgent = ua.random
-        options.add_argument(f'user-agent={userAgent}')
-
-
-        self.driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(),options=options )
-        #self.driver.delete_all_cookies()
+        # clean cookie
+        self.driver.delete_all_cookies()
 
     def load_page(self):
         self.driver.get('http://poczta.o2.pl/rejestracja/')
-
 
     def fill_name(self):
         """fill name label with randomly generate name"""
@@ -149,6 +151,7 @@ class Page_service:
         located_set_account.click()
 
     def fill_all(self) -> bool:
+        # self.driver.get("https://nordvpn.com/pl/what-is-my-ip/")
 
         try:
             print("1")
@@ -178,6 +181,7 @@ class Page_service:
             return True
         except:
             return False
+
 
 class SaveData:
 
