@@ -174,7 +174,7 @@ class Page_service:
         """ Check if information about success of creating new account is visible """
         try:
             WebDriverWait(self.driver, 5).until(
-                EC.element_to_be_selected((By.xpath, """//*[@id="app"]/div/div/div[2]/div[3]/h1"""))
+                EC.element_to_be_clickable((By.XPATH, """//*[@id="app"]/div/div/div[2]/div[3]/h1"""))
             )
             return True
         except:
