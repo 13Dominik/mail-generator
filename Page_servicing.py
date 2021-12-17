@@ -2,21 +2,29 @@
 # -*- coding: utf-8 -*-
 # from selenium import webdriver
 from time import sleep
+import random
+
 from webdriver_manager.chrome import ChromeDriverManager
 from seleniumwire import webdriver
-# from tbselenium import
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.chrome.options import Options
 from fake_useragent import UserAgent
-from seleniumwire import webdriver
-import time
-from webdriver_manager.chrome import ChromeDriverManager
-
 from selenium.webdriver.common.keys import Keys
-from generate_login_password import GenerateLoginPassword
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
-import random
+from generate_login_password import GenerateLoginPassword
 from fake_data import FakeData
+
+
+class PageException(Exception):
+    """Raised when function didnt work"""
+
+    def __init__(self, function_failed: str):
+        self.function_failed = function_failed
+        self.message = f"Something wrong with function: self.{self.function_failed}!"
+        super().__init__(self.message)
 
 
 class Page_service:
@@ -31,7 +39,7 @@ class Page_service:
 
         # proxy
         #  polish proxy:
-        proxy1  = {
+        proxy1 = {
             'proxy': {
                 'http': 'http://tLC67ARs:qieSBY74@45.137.55.17:64012',
                 'https': 'http://tLC67ARs:qieSBY74@45.137.55.17:64012',
@@ -46,11 +54,11 @@ class Page_service:
         #         'no_proxy': "localhost,127.0.0.1"
         #     }
         #  }
-                                                                                        # user agent
+        # user agent
         self.driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options=self.options)
 
         # with proxy:                                                                      # user agent         # proxy
-        #  self.driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(),options=options, seleniumwire_options=proxy1)
+        #  self.driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(),options=self.options, seleniumwire_options=proxy1)
 
         # clean cookie
         self.driver.delete_all_cookies()
@@ -71,7 +79,7 @@ class Page_service:
         surname_located.send_keys(self.surname)
 
     def fill_sex(self):
-        """clik sex label as man"""
+        """click sex label as man"""
         sex_located = self.driver.find_element_by_xpath(
             """/html/body/div[2]/div/div/div[2]/div/div[3]/form/div[2]/div/fieldset/div/div[2]/div/label""")
         sex_located.click()
@@ -96,7 +104,7 @@ class Page_service:
         Select(month_located).select_by_value(random.choice(values_of_month))
 
     def choose_year(self):
-        """chosing randomly year"""
+        """choosing randomly year"""
         year_located = self.driver.find_element_by_xpath(
             """ /html/body/div[2]/div/div/div[2]/div/div[3]/form/div[3]/fieldset/div/div[3]/div/select""")
         Select(year_located).select_by_value(str(random.randint(1960, 2001)))
@@ -151,45 +159,46 @@ class Page_service:
         located_set_account.click()
 
     def fill_all(self) -> bool:
-        # self.driver.get("https://nordvpn.com/pl/what-is-my-ip/")
+        """ Try to do all on site"""
+        functions = [self.load_page, self.fill_name, self.fill_surname, self.fill_sex, self.choose_month,
+                     self.choose_month, self.fill_login, self.fill_day, self.choose_year, self.fill_pasword,
+                     self.fill_question, self.choose_account_type, self.fill_requirements, self.set_account]
+        for function in functions:
+            try:
+                function()
+            except:
+                raise PageException(function.__name__)
+        return True
 
+    def is_success(self) -> bool:
+        """ Check if information about success of creating new account is visible """
         try:
-            print("1")
-            self.load_page()
-            print("2")
-            self.fill_name()
-            self.fill_surname()
-            self.fill_sex()
-            self.choose_month()
-            self.fill_login()
-            self.fill_day()
-            self.choose_year()
-            sleep(10)
-            self.fill_pasword()
-            self.fill_question()
-            self.choose_account_type()
-            self.fill_requirements()
-            sleep(3)
-            self.set_account()
+            WebDriverWait(self.driver, 5).until(
+                EC.element_to_be_selected((By.xpath, """//*[@id="app"]/div/div/div[2]/div[3]/h1"""))
+            )
             return True
         except:
             return False
 
-    def is_success(self) -> bool:
+    def is_blocked(self):
+        """ Check if information about blocked creating new accounts is visible """
         try:
-            self.driver.find_element_by_xpath("""//*[@id="app"]/div/div/div[2]/div[3]/h1""")
+            WebDriverWait(self.driver, 5).until(
+                EC.element_to_be_clickable((By.XPATH, """/html/body/div[2]/div/div/div[2]/div/div[3]/div[2]"""))
+            )
             return True
         except:
             return False
 
 
 class SaveData:
+    """ Save login and password of new account to txt file"""
 
     def __init__(self, login: str, password: str):
         self.login = login
         self.password = password
 
-    def save_account_data(self):
+    def save_account_data(self) -> None:
         """ Save account login and password to txt file """
-        with open('saved_accounts', mode='a') as file_to_save:
+        with open('saved_accounts.txt', mode='a') as file_to_save:
             file_to_save.write(f"{self.login}@o2.pl {self.password}\n")

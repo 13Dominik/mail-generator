@@ -2,3 +2,4 @@ venv/
 .idea/
 __pycache__/
 saved_accounts
+saved_accounts.txt
