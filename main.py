@@ -26,6 +26,8 @@ def main() -> int:
         password = labels.generate_password()
         login = labels.generate_login()
 
+        save_data = SaveData(login, password)
+
         options = Options()  # setting headers / user agent
         ua = UserAgent()
         userAgent = ua.random
@@ -42,6 +44,7 @@ def main() -> int:
                 return number_new_accounts
             if page.is_success():  # check if new account is created
                 number_new_accounts += 1
+                save_data.save_account_data()
             else:
                 raise Exception("New account not blocked and not created new account!")
 
