@@ -21,7 +21,7 @@ from fake_data import FakeData
 class PageException(Exception):
     """Raised when function didnt work"""
 
-    def __init__(self, function_failed: str):
+    def __init__(self, function_failed: str) -> None:
         self.function_failed = function_failed
         self.message = f"Something wrong with function: self.{self.function_failed}!"
         super().__init__(self.message)
@@ -55,73 +55,73 @@ class Page_service:
         #     }
         #  }
         # user agent
-        self.driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options=self.options)
+        #self.driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options=self.options)
 
         # with proxy:                                                                      # user agent         # proxy
-        #  self.driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(),options=self.options, seleniumwire_options=proxy1)
+        self.driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(),options=self.options, seleniumwire_options=proxy1)
 
         # clean cookie
         self.driver.delete_all_cookies()
 
-    def load_page(self):
+    def load_page(self) -> None:
         self.driver.get('http://poczta.o2.pl/rejestracja/')
 
-    def fill_name(self):
+    def fill_name(self) -> None:
         """fill name label with randomly generate name"""
-        name_located = self.driver.find_element_by_xpath(
-            """/html/body/div[2]/div/div/div[2]/div/div[3]/form/div[1]/div[1]/div/input""")
+        name_located = self.driver.find_element(By.XPATH,
+                                                """/html/body/div[2]/div/div/div[2]/div/div[3]/form/div[1]/div[1]/div/input""")
         name_located.send_keys(self.name)
 
-    def fill_surname(self):
+    def fill_surname(self) -> None:
         """fill surname label with randomly generate surname"""
-        surname_located = self.driver.find_element_by_xpath(
-            """/html/body/div[2]/div/div/div[2]/div/div[3]/form/div[1]/div[2]/div/input """)
+        surname_located = self.driver.find_element(By.XPATH,
+                                                   """/html/body/div[2]/div/div/div[2]/div/div[3]/form/div[1]/div[2]/div/input """)
         surname_located.send_keys(self.surname)
 
-    def fill_sex(self):
+    def fill_sex(self) -> None:
         """click sex label as man"""
-        sex_located = self.driver.find_element_by_xpath(
-            """/html/body/div[2]/div/div/div[2]/div/div[3]/form/div[2]/div/fieldset/div/div[2]/div/label""")
+        sex_located = self.driver.find_element(By.XPATH,
+                                               """/html/body/div[2]/div/div/div[2]/div/div[3]/form/div[2]/div/fieldset/div/div[2]/div/label""")
         sex_located.click()
 
-    def fill_login(self):
+    def fill_login(self) -> None:
         """ fill login label with randomly generate login"""
-        login_located = self.driver.find_element_by_xpath(
-            """/html/body/div[2]/div/div/div[2]/div/div[3]/form/div[4]/div/div[1]/div[1]/input """)
+        login_located = self.driver.find_element(By.XPATH,
+                                                 """/html/body/div[2]/div/div/div[2]/div/div[3]/form/div[4]/div/div[1]/div[1]/input """)
         login_located.send_keys(self.login)
 
-    def fill_day(self):
+    def fill_day(self) -> None:
         """fill day label with randomly choosed day"""
-        day_located = self.driver.find_element_by_xpath(
-            """/html/body/div[2]/div/div/div[2]/div/div[3]/form/div[3]/fieldset/div/div[1]/input""")
+        day_located = self.driver.find_element(By.XPATH,
+                                               """/html/body/div[2]/div/div/div[2]/div/div[3]/form/div[3]/fieldset/div/div[1]/input""")
         day_located.send_keys(str(random.randint(1, 28)))
 
-    def choose_month(self):
+    def choose_month(self) -> None:
         """ choosing randomly month"""
-        month_located = self.driver.find_element_by_xpath(
-            """/html/body/div[2]/div/div/div[2]/div/div[3]/form/div[3]/fieldset/div/div[2]/div/select""")
+        month_located = self.driver.find_element(By.XPATH,
+                                                 """/html/body/div[2]/div/div/div[2]/div/div[3]/form/div[3]/fieldset/div/div[2]/div/select""")
         values_of_month = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
         Select(month_located).select_by_value(random.choice(values_of_month))
 
-    def choose_year(self):
+    def choose_year(self) -> None:
         """choosing randomly year"""
-        year_located = self.driver.find_element_by_xpath(
-            """ /html/body/div[2]/div/div/div[2]/div/div[3]/form/div[3]/fieldset/div/div[3]/div/select""")
+        year_located = self.driver.find_element(By.XPATH,
+                                                """ /html/body/div[2]/div/div/div[2]/div/div[3]/form/div[3]/fieldset/div/div[3]/div/select""")
         Select(year_located).select_by_value(str(random.randint(1960, 2001)))
 
-    def fill_pasword(self):
+    def fill_pasword(self) -> None:
         """fill password and repeated password"""
-        password_locate = self.driver.find_element_by_xpath(
-            """ /html/body/div[2]/div/div/div[2]/div/div[3]/form/div[5]/div/div[1]/div[1]/input""")
-        password_repeated_locate = self.driver.find_element_by_xpath(
-            """/html/body/div[2]/div/div/div[2]/div/div[3]/form/div[5]/div/div[2]/div/input""")
+        password_locate = self.driver.find_element(By.XPATH,
+                                                   """ /html/body/div[2]/div/div/div[2]/div/div[3]/form/div[5]/div/div[1]/div[1]/input""")
+        password_repeated_locate = self.driver.find_element(By.XPATH,
+                                                            """/html/body/div[2]/div/div/div[2]/div/div[3]/form/div[5]/div/div[2]/div/input""")
         password_locate.send_keys(self.password)
         password_repeated_locate.send_keys(self.password)
 
-    def fill_question(self):
+    def fill_question(self) -> None:
         """chosing auxiliary question and fill"""
-        label_with_question_located = self.driver.find_element_by_xpath(
-            """ //*[@id="app"]/div/div/div[2]/div/div[3]/form/div[6]/div/div[3]/div""")
+        label_with_question_located = self.driver.find_element(By.XPATH,
+                                                               """ //*[@id="app"]/div/div/div[2]/div/div[3]/form/div[6]/div/div[3]/div""")
         first_question_located = label_with_question_located.find_element_by_xpath(
             """/html/body/div[2]/div/div/div[2]/div/div[3]/form/div[6]/div/div[3]/div/div/button[1]""")
         second_question_located = label_with_question_located.find_element_by_xpath(
@@ -133,29 +133,29 @@ class Page_service:
         else:
             second_question_located.click()
 
-        selected_question = self.driver.find_element_by_xpath(
-            """/html/body/div[2]/div/div/div[2]/div/div[3]/form/div[6]/div/div[4]/div/div/select""")
+        selected_question = self.driver.find_element(By.XPATH,
+                                                     """/html/body/div[2]/div/div/div[2]/div/div[3]/form/div[6]/div/div[4]/div/div/select""")
         Select(selected_question).select_by_value('q6')
-        question_answered = self.driver.find_element_by_xpath(
-            """/html/body/div[2]/div/div/div[2]/div/div[3]/form/div[6]/div/div[4]/input""")
+        question_answered = self.driver.find_element(By.XPATH,
+                                                     """/html/body/div[2]/div/div/div[2]/div/div[3]/form/div[6]/div/div[4]/input""")
         question_answered.send_keys(self.toy)
 
-    def choose_account_type(self):
+    def choose_account_type(self) -> None:
         """Chosing account type"""
-        located_account_type = self.driver.find_element_by_xpath(
-            """/html/body/div[2]/div/div/div[2]/div/div[3]/form/div[7]/div[1]/fieldset/div[2]/div[1]/div/label""")
+        located_account_type = self.driver.find_element(By.XPATH,
+                                                        """/html/body/div[2]/div/div/div[2]/div/div[3]/form/div[7]/div[1]/fieldset/div[2]/div[1]/div/label""")
         located_account_type.click()
 
-    def fill_requirements(self):
+    def fill_requirements(self) -> None:
         """confirming requirements"""
-        located_requirements = self.driver.find_element_by_xpath(
-            """/html/body/div[2]/div/div/div[2]/div/div[3]/form/div[7]/div[2]/div[1]/label""")
+        located_requirements = self.driver.find_element(By.XPATH,
+                                                        """/html/body/div[2]/div/div/div[2]/div/div[3]/form/div[7]/div[2]/div[1]/label""")
         located_requirements.click()
 
-    def set_account(self):
+    def set_account(self) -> None:
         """clicking set up a new account"""
-        located_set_account = self.driver.find_element_by_xpath(
-            """/html/body/div[2]/div/div/div[2]/div/div[3]/form/button""")
+        located_set_account = self.driver.find_element(By.XPATH,
+                                                       """/html/body/div[2]/div/div/div[2]/div/div[3]/form/button""")
         located_set_account.click()
 
     def fill_all(self) -> bool:
@@ -180,7 +180,7 @@ class Page_service:
         except:
             return False
 
-    def is_blocked(self):
+    def is_blocked(self) -> bool:
         """ Check if information about blocked creating new accounts is visible """
         try:
             WebDriverWait(self.driver, 5).until(
@@ -194,7 +194,7 @@ class Page_service:
 class SaveData:
     """ Save login and password of new account to txt file"""
 
-    def __init__(self, login: str, password: str):
+    def __init__(self, login: str, password: str) -> None:
         self.login = login
         self.password = password
 
