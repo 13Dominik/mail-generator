@@ -16,6 +16,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from generate_login_password import GenerateLoginPassword
 from fake_data import FakeData
+import settings
 
 
 class PageException(Exception):
@@ -29,39 +30,40 @@ class PageException(Exception):
 
 class Page_service:
 
-    def __init__(self, name: str, surname: str, password: str, login: str, toy: str, options: Options) -> None:
+    def __init__(self, name: str, surname: str, password: str, login: str, toy: str, options: Options,
+                 proxy: bool) -> None:
+        """ Run page and get all needed data to fill all labels"""
+
         self.name = name
         self.surname = surname
         self.password = password
         self.login = login
         self.toy = toy
         self.options = options  # for user agent
+        self.proxy = None
 
-        # proxy
-        #  polish proxy:
-        proxy1 = {
-            'proxy': {
-                'http': 'http://tLC67ARs:qieSBY74@45.137.55.17:64012',
-                'https': 'http://tLC67ARs:qieSBY74@45.137.55.17:64012',
-                'no_proxy': "localhost,127.0.0.1"
-            }
-        }
-        # rotating proxy:
-        # proxy2 = {
-        #    'proxy': {
-        #         'http': 'http://pxu27239-0:hP4LKCLgKQr8kKZ6nliY@x.botproxy.net:8080',
-        #         'https': 'http://pxu27239-0:hP4LKCLgKQr8kKZ6nliY@x.botproxy.net:8080',
-        #         'no_proxy': "localhost,127.0.0.1"
-        #     }
-        #  }
-        # user agent
-        #self.driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options=self.options)
-
-        # with proxy:                                                                      # user agent         # proxy
-        self.driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(),options=self.options, seleniumwire_options=proxy1)
+        if proxy:  # check if run with proxy or no                                             # user agent
+            self.driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options=self.options,
+                                           seleniumwire_options=self.proxy)  # proxy
+        else:
+            self.driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options=self.options)
 
         # clean cookie
         self.driver.delete_all_cookies()
+
+    @property
+    def proxy(self):
+        return self.__proxy
+
+    @proxy.setter
+    def proxy(self, value):
+        self.__proxy = {
+            'proxy': {
+                'http': settings.proxy_http,
+                'https': settings.proxy_http,
+                'no_proxy': "localhost,127.0.0.1"
+            }
+        }
 
     def load_page(self) -> None:
         self.driver.get('http://poczta.o2.pl/rejestracja/')

@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from time import sleep
 
+import settings
 from fake_data import FakeData
 from selenium.webdriver.chrome.options import Options
 from seleniumwire import webdriver
@@ -33,11 +34,15 @@ def main() -> int:
         userAgent = ua.random
         options.add_argument(f'user-agent={userAgent}')
 
-        # different way to set up a proxy with useragent
-        # PROXY = "89.171.144.168:5678"
+        # different way to set up .env proxy with useragent
+        # PROXY = "89.171.144.168:5678" # random proxy
         # options.add_argument("--proxy-server=%s" % PROXY)
 
-        page = Page_service(name, surname, password, login, person.get_random_toy_from_txt(), options)
+        turn_proxy = settings.is_proxy()  # True if file .env exist or False if not
+        # turn_proxy = False -> alternative version
+
+        page = Page_service(name, surname, password, login, person.get_random_toy_from_txt(), options,
+                            turn_proxy)
 
         if page.fill_all():  # check if did all
             if page.is_blocked():  # check if creating new accounts is blocked if so end program
