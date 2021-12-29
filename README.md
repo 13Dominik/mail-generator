@@ -1,7 +1,8 @@
 ## Mail Generator
 <br>
 Mail Generator is a script created in python 3.8 based on selenium library, which help with automation setting up new email accounts.It's work with polish domain called O2.pl
-Script generate random polish name and surname
+Script generate random polish name and surname.<br>
+Link to the registration page : https://poczta.o2.pl/rejestracja/
 
 ## Installation 💾
 To install script, open a comand line in a directory where you want to have script installed and use git clone command:
